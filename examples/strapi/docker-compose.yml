@@ -1,7 +1,6 @@
 version: '3'
 
 # my test
-# docker-compose up -f
 # 守护开启
 # docker-compose up -d
 services:
