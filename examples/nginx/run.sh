@@ -1,6 +1,5 @@
 #!/bin/sh
 
-
 docker run -it \
   --name my-nginx \
   -p 5500:80 \
