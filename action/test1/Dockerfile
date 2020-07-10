@@ -1,7 +1,7 @@
 FROM centos:7
 
 LABEL author="cloudyan cloudcode@qq.com"
-LABEL desc="centos7.6"
+LABEL desc="centos7"
 
 # WORKDIR ./
 
