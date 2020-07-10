@@ -1,0 +1,28 @@
+# 【注意】在推送代码前，务必去 https://github.com/my-id/my-project/settings/secrets 页面创建好上述配置中的变量：
+# - HOST      服务器 IP 地址
+# - SSH_KEY   ssh-keygen 命令生成的私钥，通常存在 ~/.ssh/id_rsa
+
+name: Deploy Server
+on:
+  push:
+    branches:
+      - master
+jobs:
+  SSH:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@master
+      - name: Deploy
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: root
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            cd /var/www
+            git fetch --all
+            git reset --hard
+            git pull
+            docker-compose down
+            docker-compose up -d
