@@ -1,6 +1,11 @@
 # gitlab
 
 - gitlab/gitlab-ce
+- gitlab/gitlab-runner
+
+## install
+
+gitlab
 
 ```bash
 docker run -d \
@@ -13,4 +18,15 @@ docker run -d \
   -v ~/docker/gitlab/logs:/var/log/gitlab \
   -v ~/docker/gitlab/data:/var/opt/gitlab \
   gitlab/gitlab-ce
+```
+
+gitlab-runner
+
+```bash
+docker run -d \
+  --name gitlab-runner \
+  --restart always \
+  -v ~/docker/gitlab-runner/config:/etc/gitlab-runner \
+  -v /var/run/docker.sock:/var/run/docker.sock \
+  gitlab/gitlab-runner
 ```
