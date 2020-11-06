@@ -1,6 +1,8 @@
 # jenkins docker
 
 - https://www.jenkins.io/zh/doc/book/installing/
+- 一些示例
+  - https://github.com/jenkins-docs
 
 ## install
 
@@ -15,5 +17,6 @@ docker run \
   -v /var/run/docker.sock:/var/run/docker.sock \
   jenkinsci/blueocean
 ```
+
 
 
