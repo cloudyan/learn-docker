@@ -58,6 +58,7 @@ https://docker_practice.gitee.io/zh-cn/install/mirror.html
 - `dig @114.114.114.114 registry-1.docker.io`找到可用IP
 - 修改 `/etc/hosts` 设置可用 ip，如
   - `52.4.20.24 registry-1.docker.io`
+- 保存后重新操作即可
 
 参考:
 

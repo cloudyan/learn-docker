@@ -10,6 +10,6 @@ services:       # 容器
       - '8080:8080'
     volumes:                        # 数据卷,本地文件夹:容器文件夹
       - '~/docker/jenkins/jenkins_home:/var/jenkins_home'
-      - '~/docker/jenkins/home:/home'
-      - '/var/run/docker.sock:/var/run/docker.sock'
+      # - '~/docker/jenkins/home:/home'
+      # - '/var/run/docker.sock:/var/run/docker.sock'
       # - '/usr/local/bin/docker:/usr/bin/docker'
