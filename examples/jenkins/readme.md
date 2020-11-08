@@ -15,6 +15,7 @@ docker run \
   -p 50000:50000 \
   -v ~/docker/jenkins/jenkins_home:/var/jenkins_home \
   -v /var/run/docker.sock:/var/run/docker.sock \
+  -v /usr/local/bin/docker:/usr/bin/docker \
   jenkinsci/blueocean
 ```
 
