@@ -68,6 +68,9 @@ docker-machine env default
 ```
 
 - https://stackoverflow.com/questions/44084846/cannot-connect-to-the-docker-daemon-on-macos
+- https://docs.docker.com/docker-for-mac/troubleshoot/
+  - `export DOCKER_HOST=unix:///var/run/docker.sock`
+- https://forums.docker.com/t/using-pycharm-docker-plugin-with-docker-beta/8617/9
 
 参考：
 
