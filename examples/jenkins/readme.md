@@ -7,6 +7,17 @@
 ## install
 
 ```bash
+
+docker run \
+  --name jenkins \
+  -u root \
+  -d \
+  -p 8080:8080 \
+  -p 50000:50000 \
+  -v ~/docker/jenkins/jenkins_home:/var/jenkins_home \
+  -v /var/run/docker.sock:/var/run/docker.sock \
+  jenkinsci/blueocean
+
 docker run \
   -u root \
   --rm \
@@ -14,9 +25,10 @@ docker run \
   -p 8080:8080 \
   -p 50000:50000 \
   -v ~/docker/jenkins/jenkins_home:/var/jenkins_home \
-  # -v /var/run/docker.sock:/var/run/docker.sock \
-  # -v /usr/local/bin/docker:/usr/bin/docker \
+  -v /var/run/docker.sock:/var/run/docker.sock \
   jenkinsci/blueocean
+
+
 ```
 
 遇到问题
@@ -76,3 +88,4 @@ docker-machine env default
 
 - https://medium.com/swlh/getting-permission-denied-error-when-pulling-a-docker-image-in-jenkins-docker-container-on-mac-b335af02ebca
 - https://testerhome.com/topics/9426
+- https://www.runoob.com/docker/docker-machine.html
