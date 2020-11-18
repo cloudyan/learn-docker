@@ -1,4 +1,20 @@
-# docker
+# Docker
+
+如何查看 docker 容器的相关配置信息，如暴露的端口，数据配置路径等
+
+<a href="http://play-with-docker.com"><img src="https://github.com/play-with-docker/stacks/raw/cff22438cb4195ace27f9b15784bbb497047afa7/assets/images/button.png" alt="Try in PWD"></a>
+
+## 常用服务
+
+1. mongo, mysql, postgres, redis
+2. nginx, node
+3. sonarqube, yapi
+4. github ci, jenkins
+5. busybox, alpine, centos, ubuntu
+6. rabbitmq, ElasticSearch
+7. 制作 docker
+
+BusyBox 是一个集成了一百多个最常用 Linux 命令和工具（如 cat、echo、grep、mount、telnet 等）的精简工具箱，它只需要几 MB 的大小，很方便进行各种快速验证，被誉为“Linux 系统的瑞士军刀”。
 
 ## 示例
 
@@ -60,8 +76,11 @@ https://docker_practice.gitee.io/zh-cn/install/mirror.html
   - `52.4.20.24 registry-1.docker.io`
 - 保存后重新操作即可
 
+
+
 参考:
 
 - http://yeasy.gitbooks.io/docker_practice/content/
 - https://github.com/kstaken/dockerfile-examples
 - https://github.com/komljen/dockerfile-examples
+- https://github.com/docker-library/docs
