@@ -56,6 +56,12 @@ BusyBox 是一个集成了一百多个最常用 Linux 命令和工具（如 cat�
   - icecoder
   - ghost
 
+## Dockerfile
+
+```bash
+docker build -t testOpenresty
+```
+
 ## 镜像加速
 
 https://docker_practice.gitee.io/zh-cn/install/mirror.html
