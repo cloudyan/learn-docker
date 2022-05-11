@@ -2,6 +2,8 @@
 
 - https://jenkins.io/zh/doc/book/installing/#setup-wizard
 
+
+```bash
 docker run \
   -u root \
   --rm \
@@ -11,5 +13,6 @@ docker run \
   -v ~/docker/jenkins:/var/jenkins_home \
   -v /var/run/docker.sock:/var/run/docker.sock \
   jenkinsci/blueocean
+```
 
 -v "$HOME":/home \

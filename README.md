@@ -4,6 +4,9 @@
 
 <a href="http://play-with-docker.com"><img src="https://github.com/play-with-docker/stacks/raw/cff22438cb4195ace27f9b15784bbb497047afa7/assets/images/button.png" alt="Try in PWD"></a>
 
+- [文档](./docs/readme.md)
+- [examples](./examples/)
+
 ## 常用服务
 
 1. mongo, mysql, postgres, redis

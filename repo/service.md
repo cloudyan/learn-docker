@@ -60,8 +60,9 @@ docker run \
 
 ### nginx
 
+```bash
 docker run --name mynginx -d -p 8080:80 -v /some/nginx.conf:/etc/nginx/nginx.conf nginx
-
+```
 
 ## sonarqube
 
