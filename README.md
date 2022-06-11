@@ -63,6 +63,8 @@ BusyBox 是一个集成了一百多个最常用 Linux 命令和工具（如 cat�
 
 ```bash
 docker build -t testOpenresty
+
+docker run -it -p 1880:1880 -v /home/user/node_red_data:/data --name mynodered nodered/node-red
 ```
 
 ## 镜像加速
