@@ -1,0 +1,13 @@
+{
+  "name": "wordpress-local",
+  "version": "1.0.0",
+  "description": "```bash npm -g i @wordpress/env wp-env start ```",
+  "main": "index.js",
+  "scripts": {
+    "wp": "wp-env",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

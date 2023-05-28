@@ -9,6 +9,9 @@ services:
     # or
     # mysql:8.0
     image: mysql:8.0
+
+    # [Warning] [MY-011068] [Server] The syntax '--skip-host-cache' is deprecated and will be removed in a future release. Please use SET GLOBAL host_cache_size=0 instead.
+    # [Warning] [MY-010918] [Server] 'default_authentication_plugin' is deprecated and will be removed in a future release. Please use authentication_policy instead.
     command:
       - --default_authentication_plugin=mysql_native_password
       - --character-set-server=utf8mb4
@@ -23,6 +26,7 @@ services:
       MYSQL_USER: wordpress
       MYSQL_PASSWORD: wordpress
 
+  # info: No 'wp-config.php' found in /var/www/html, but 'WORDPRESS_...' variables supplied; copying 'wp-config-docker.php' (WORDPRESS_DB_HOST WORDPRESS_DB_NAME WORDPRESS_DB_PASSWORD WORDPRESS_DB_USER)
   wordpress:
     depends_on:
       - wpdb
