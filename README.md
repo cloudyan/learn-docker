@@ -74,6 +74,17 @@ https://docker_practice.gitee.io/zh-cn/install/mirror.html
 - [Azure 中国镜像](https://github.com/Azure/container-service-for-azure-china/blob/master/aks/README.md#22-container-registry-proxy) https://dockerhub.azk8s.cn
 - [七牛云加速器](https://kirk-enterprise.github.io/hub-docs/#/user-guide/mirror) https://reg-mirror.qiniu.com
 
+```json
+{
+  "registry-mirrors": [
+    "https://hub-mirror.c.163.com",
+    "https://mirror.baidubce.com",
+    "https://registry.docker-cn.com",
+    "https://docker.mirrors.ustc.edu.cn"
+  ]
+}
+```
+
 ## 常见问题
 
 解决Error response from daemon: Get https://registry-1.docker.io/v2/library/hello-world/manifests/ EOF 问题
