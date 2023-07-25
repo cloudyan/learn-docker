@@ -7,6 +7,25 @@
 - [文档](./docs/readme.md)
 - [examples](./examples/)
 
+```bash
+# 命令行
+docker run \
+  --name hello-nginx \
+  -p 80:80 \
+  -v /tmp/hello:/usr/share/nginx/html \
+  -e KEY1=VALUE1 \
+  -d \
+  nginx:latest
+```
+
+- `-p` 是端口映射
+- `-v` 是指定数据卷挂载目录
+- `-e` 是指定环境变量
+- `-d` 是后台运行
+- `-i` 是 terminal 交互的方式运行
+- `-t` 是 tty 终端类型
+
+
 ## 常用服务
 
 1. mongo, mysql, postgres, redis
