@@ -33,6 +33,8 @@ docker run \
 ```bash
 FROM node:latest
 
+ARG RUNTIME_ENV
+
 WORKDIR /app
 
 COPY . .
@@ -41,6 +43,8 @@ RUN npm config set registry https://registry.npmmirror.com/
 
 RUN npm install -g http-server
 
+ENV RUNTIME_ENV=${RUNTIME_ENV}
+
 EXPOSE 8080
 
 CMD ["http-server", "-p", "8080"]
@@ -48,12 +52,24 @@ CMD ["http-server", "-p", "8080"]
 
 指令含义
 
-- `FROM`：基于一个基础镜像来修改
-- `WORKDIR`：指定当前工作目录
-- `COPY`：把容器外的内容复制到容器内
-- `EXPOSE`：指定要暴露的端口，声明当前容器要访问的网络端口，比如这里起服务会用到 8080
-- `RUN`：在容器内执行命令
-- `CMD`：容器启动的时候执行的命令
+- `FROM`: 基于一个基础镜像来修改
+- `WORKDIR`: 指定当前工作目录
+- `COPY`: 把容器外的内容复制到容器内
+- `EXPOSE`: 指定要暴露的端口，声明当前容器要访问的网络端口，比如这里起服务会用到 8080
+- `RUN`: 在容器内执行命令
+- `CMD`: 容器启动的时候执行的命令
+- `ARG`: 声明构建参数，使用 `${xxx}` 来取
+- `ENV`: 声明环境变量
+
+差异
+
+- `COPY` vs `ADD`
+  - 把宿主机的文件复制到容器内
+  - `ADD` 会把 `tar.gz` 解压然后复制到容器内
+  - `COPY` 没有解压，复制到容器内
+- `CMD` vs `ENTRYPOINT`
+  - 用 `CMD` 的时候，启动命令是可以重写的，将 Dockerfile 中 `CMD` 命令重写
+  - 使用 `ENTRYPOINT` 不能重新启动命令
 
 构建命令格式
 
@@ -102,3 +118,4 @@ EXPOSE 3000
 
 CMD ["node", "/app/main.js"]
 ```
+
