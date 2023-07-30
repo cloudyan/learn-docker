@@ -5,26 +5,10 @@
 <a href="http://play-with-docker.com"><img src="https://github.com/play-with-docker/stacks/raw/cff22438cb4195ace27f9b15784bbb497047afa7/assets/images/button.png" alt="Try in PWD"></a>
 
 - [文档](./docs/readme.md)
+- [入门](./hello/index.md)
 - [examples](./examples/)
 
-```bash
-# 命令行
-docker run \
-  --name hello-nginx \
-  -p 80:80 \
-  -v /tmp/hello:/usr/share/nginx/html \
-  -e KEY1=VALUE1 \
-  -d \
-  nginx:latest
-```
-
-- `-p` 是端口映射
-- `-v` 是指定数据卷挂载目录
-- `-e` 是指定环境变量
-- `-d` 是后台运行
-- `-i` 是 terminal 交互的方式运行
-- `-t` 是 tty 终端类型
-
+推荐参看上述入门文档
 
 ## 常用服务
 
