@@ -1,6 +1,6 @@
-version: '3'
+version: '3.8'
 
-# docker-compose -f test.yml up
+# docker-compose -f test.yml up -d
 services:
   db:
     container_name: my-mysql
@@ -16,4 +16,10 @@ services:
       MYSQL_USER: strapi
       MYSQL_PASSWORD: strapi
     volumes:
-      - ./db:/var/lib/mysql
+      # 使用命名数据卷，如不存在，自动创建
+      - mysql:/var/lib/mysql
+    ports:
+      - '3306:3306'
+
+volumes:
+  mysql:

@@ -1,0 +1,16 @@
+version: '3.8'
+
+# docker-compose -f test.yml up -d
+# 测试 h5 项目dist，拷贝座位当前的 dist
+services:
+  my-nginx:
+    container_name: my-nginx
+    image: nginx:alpine
+    restart: always
+    volumes:
+      # 使用命名数据卷，如不存在，自动创建
+      - /Users/admin/docker/nginx/dist:/usr/share/nginx/html
+      - /Users/admin/docker/nginx/conf.d:/etc/nginx/conf.d
+    ports:
+      - '5500:80'
+
