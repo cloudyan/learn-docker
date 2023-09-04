@@ -1,8 +1,8 @@
-FROM node:latest
+FROM node:18
 
 WORKDIR /app
 
-COPY . .
+COPY ../dist .
 
 RUN npm config set registry https://registry.npmmirror.com/
 

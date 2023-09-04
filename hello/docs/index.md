@@ -1,4 +1,28 @@
-# 入门
+# docker 与 CI/CD
+
+分享主题
+
+1. Docker 概念基础
+   1. 介绍
+   2. 原理
+2. Docker 入门
+   1. 常用命令
+   2. 构建镜像
+   3. 前端构建镜像
+3. CI/CD 介绍
+   1. 介绍
+   2. CI 持续集成
+   3. CD 持续交付/部署
+4. 前端的 CI/CD 实现
+   1. jenkins 流水线
+   2. github actions
+   3. gitlab runner
+
+## Docker 概念基础
+
+
+
+## Docker 入门
 
 入门学习，我们将挂载盘统一放在 `/tmp/docker/` 目录下
 
@@ -70,6 +94,16 @@ CMD ["http-server", "-p", "8080"]
 - `CMD` vs `ENTRYPOINT`
   - 用 `CMD` 的时候，启动命令是可以重写的，将 Dockerfile 中 `CMD` 命令重写
   - 使用 `ENTRYPOINT` 不能重新启动命令
+
+```bash
+# CMD
+
+# 构建镜像
+docker build -t hello:first -f first.dockerfile .
+
+# 运行容器（重新命令）
+docker run -td --name hello-1 -p 5173:5173 hello:first npm run dev -- --host 0.0.0.0
+```
 
 构建命令格式
 

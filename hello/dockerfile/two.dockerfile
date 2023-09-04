@@ -6,12 +6,13 @@ COPY package.json .
 
 RUN npm config set registry https://registry.npmmirror.com/
 
-RUN npm install
+RUN npm i -g pnpm
 
 COPY . .
 
+RUN pnpm install
 RUN npm run build
 
 EXPOSE 3000
 
-CMD [ "node", "./dist/main.js" ]
+CMD [ "hs", "./dist/main.js" ]
