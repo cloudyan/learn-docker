@@ -20,15 +20,71 @@
 
 ## Docker 概念基础
 
+### 什么是 Docker
 
+Docker是一种轻量级的虚拟化技术，同时是一个开源的应用容器运行环境搭建平台
+
+> 容器是一种标准软件单元，它打包代码及其所有依赖项，以便应用程序从一个计算环境快速可靠地运行到另一个计算环境。Docker 容器映像是一个轻量级、独立的可执行软件包，其中包括运行应用程序所需的一切：代码、运行时、系统工具、系统库和设置。
+>
+> Docker 使用 Google 公司推出的 Go 语言 进行开发实现，基于 Linux 内核的 cgroup，namespace，以及 OverlayFS 类的 Union FS 等技术，对进程进行封装隔离，属于 操作系统层面的虚拟化技术。
+
+Docker 架构
+
+![docker-on-linux](./assets/docker-on-linux.png)
+
+Docker vs VM(virtual Machines)
+
+传统虚拟化
+
+![vm](./assets/virtualization.webp)
+
+Docker
+
+![docker](./assets/docker.webp)
+
+### 为什么要用 Docker
+
+- 更高效的利用系统资源
+- 更快速的启动时间
+- 一致的运行环境
+- 持续交付和部署
+- 更轻松的迁移
+- 更轻松的维护和扩展
+
+对比传统虚拟机总结
+
+特性 | 容器 | 虚拟机
+--- | ---- | ----
+启动 | 秒级 | 分钟级
+硬盘使用 | 一般为 MB | 一般为 GB
+性能 | 接近原生 | 弱于
+系统支持量 | 单机支持上千个容器 | 一般几十个
 
 ## Docker 入门
 
-入门学习，我们将挂载盘统一放在 `/tmp/docker/` 目录下
+Docker 使用客户端-服务器架构。
 
-1. hello-nginx
-2. Dockerfile
-3. hello-mysql
+Docker 客户端与 Docker 守护程序通信，后者负责构建、运行和分发 Docker 容器的繁重工作。Docker 客户端和守护程序可以在同一系统上运行，也可以将 Docker 客户端连接到远程 Docker 守护程序。
+
+Docker architecture
+
+![architecture](./assets/architecture.svg)
+
+大家本机学习，可以从官网下载 Docker desktop 安装来使用 Docker。
+
+更多内容，参考[官网文档](https://docs.docker.com/)
+
+### 入门学习
+
+我们构建以下几个常用容器
+
+1. 基础镜像构建
+   1. hello-nginx
+   2. hello-nodejs
+   3. hello-mysql
+2. 多阶段构建
+   1. Dockerfile 构建镜像
+3. 容器编排 docker-compose
 
 ### hello-nginx
 

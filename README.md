@@ -72,6 +72,10 @@ docker run -it -p 1880:1880 -v /home/user/node_red_data:/data --name mynodered n
 
 ## 镜像加速
 
+参看配置
+
+- https://gist.github.com/y0ngb1n/7e8f16af3242c7815e7ca2f0833d3ea6
+
 https://docker_practice.gitee.io/zh-cn/install/mirror.html
 
 - [Azure 中国镜像](https://github.com/Azure/container-service-for-azure-china/blob/master/aks/README.md#22-container-registry-proxy) https://dockerhub.azk8s.cn
