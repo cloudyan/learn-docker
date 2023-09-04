@@ -2,6 +2,8 @@
 
 分享主题
 
+规划
+
 1. Docker 概念基础
    1. 介绍
    2. 原理
@@ -18,29 +20,34 @@
    2. github actions
    3. gitlab runner
 
+目录
+
+- [docker 与 CI/CD](#docker-与-cicd)
+  - [Docker 概念基础](#docker-概念基础)
+    - [什么是 Docker](#什么是-docker)
+    - [为什么要用 Docker](#为什么要用-docker)
+    - [Docker 是怎么实现的](#docker-是怎么实现的)
+  - [Docker 入门](#docker-入门)
+    - [入门学习](#入门学习)
+    - [hello-nginx](#hello-nginx)
+    - [Dockerfile 构建镜像](#dockerfile-构建镜像)
+    - [Docker 缓存](#docker-缓存)
+    - [多阶段构建](#多阶段构建)
+    - [为什么 Dockerfile 有的时候需要加 `ln -s /sbin/runc /usr/bin/runc`](#为什么-dockerfile-有的时候需要加-ln--s-sbinrunc-usrbinrunc)
+
 ## Docker 概念基础
 
 ### 什么是 Docker
 
-Docker是一种轻量级的虚拟化技术，同时是一个开源的应用容器运行环境搭建平台
+Docker是一种轻量级的虚拟化技术，同时是一个开源的应用容器运行环境搭建平台。
 
-> 容器是一种标准软件单元，它打包代码及其所有依赖项，以便应用程序从一个计算环境快速可靠地运行到另一个计算环境。Docker 容器映像是一个轻量级、独立的可执行软件包，其中包括运行应用程序所需的一切：代码、运行时、系统工具、系统库和设置。
+> 容器是一种标准软件单元，它打包代码及其所有依赖项，以便应用程序从一个计算环境快速可靠地运行到另一个计算环境。
 >
-> Docker 使用 Google 公司推出的 Go 语言 进行开发实现，基于 Linux 内核的 cgroup，namespace，以及 OverlayFS 类的 Union FS 等技术，对进程进行封装隔离，属于 操作系统层面的虚拟化技术。
+> Docker 容器映像是一个轻量级、独立的可执行软件包，其中包括运行应用程序所需的一切：代码、运行时、系统工具、系统库和设置。
 
-Docker 架构
+Docker vs 传统虚拟化
 
-![docker-on-linux](./assets/docker-on-linux.png)
-
-Docker vs VM(virtual Machines)
-
-传统虚拟化
-
-![vm](./assets/virtualization.webp)
-
-Docker
-
-![docker](./assets/docker.webp)
+![Docker vs VM(virtual Machines)](./assets/docker-vs-vm.png)
 
 ### 为什么要用 Docker
 
@@ -60,6 +67,42 @@ Docker
 性能 | 接近原生 | 弱于
 系统支持量 | 单机支持上千个容器 | 一般几十个
 
+### Docker 是怎么实现的
+
+我们写 js、css 遇到命名冲突，常使用命名空间来隔离作用域。
+
+Docker 在一个操作系统上实现多个独立的容器也是这种思路。
+
+> Docker 使用 Google 公司推出的 Go 语言 进行开发实现，基于 Linux 内核的 cgroup，namespace，以及 OverlayFS 类的 Union FS 等技术，对进程进行封装隔离，属于 操作系统层面的虚拟化技术。由于隔离的进程独立于宿主和其它的隔离的进程，因此也称其为容器。
+
+Docker 架构
+
+![docker-on-linux](./assets/docker-on-linux.png)
+
+> runc 是一个 Linux 命令行工具，用于根据 OCI容器运行时规范 创建和运行容器。
+>
+> containerd 是一个守护程序，它管理容器生命周期，提供了在一个节点上执行容器和管理镜像的最小功能集。
+
+linux 操作系统提供了 namespace 机制，可以给进程、用户、网络等分配一个命名空间，这个命名空间下的资源都是独立命名的。
+
+- linux namespace
+  - PID namespace: 进程 id 的命名空间
+  - IPC namespace: 进程通信的命名空间
+  - Mount namespace: 文件系统挂载的命名空间
+  - Network namespace: 网络的命名空间
+  - User namespace: 用户和用户组的命名空间
+  - UTS namespace: 主机名和域名的命名空间
+- 限制容器资源访问
+  - Control Groups 指定资源的限制
+  - 如：cpu 用多少、内存用多少、磁盘用多少
+- 容器镜像与分层
+  - UnionFS 联合文件系统
+  - Dockerfile 指令
+  - 镜像层
+  - 缓存层
+  - 查看创建镜像层的命令 `docker history hello:first1`
+
+
 ## Docker 入门
 
 Docker 使用客户端-服务器架构。
@@ -70,7 +113,7 @@ Docker architecture
 
 ![architecture](./assets/architecture.svg)
 
-大家本机学习，可以从官网下载 Docker desktop 安装来使用 Docker。
+大家本机学习，可以从官网下载安装 Docker desktop 来使用 Docker。
 
 更多内容，参考[官网文档](https://docs.docker.com/)
 
@@ -130,7 +173,7 @@ EXPOSE 8080
 CMD ["http-server", "-p", "8080"]
 ```
 
-指令含义
+Dockerfile 指令含义
 
 - `FROM`: 基于一个基础镜像来修改
 - `WORKDIR`: 指定当前工作目录
@@ -147,12 +190,14 @@ CMD ["http-server", "-p", "8080"]
   - 把宿主机的文件复制到容器内
   - `ADD` 会把 `tar.gz` 解压然后复制到容器内
   - `COPY` 没有解压，复制到容器内
+  - 推荐使用 `COPY`，因为该之类语义明确
 - `CMD` vs `ENTRYPOINT`
   - 用 `CMD` 的时候，启动命令是可以重写的，将 Dockerfile 中 `CMD` 命令重写
   - 使用 `ENTRYPOINT` 不能重新启动命令
 
 ```bash
 # CMD
+CMD ["sleep", "10m"]
 
 # 构建镜像
 docker build -t hello:first -f first.dockerfile .
@@ -165,6 +210,10 @@ docker run -td --name hello-1 -p 5173:5173 hello:first npm run dev -- --host 0.0
 
 ```bash
 # 这个 . 就是构建上下文的目录，你也可以指定别的路径。
+# 第一步 docker build 是将上下文目录（和子目录）发送到 docker 守护进程
+# 内部的 COPY 等就是相对于这个目录路径
+# COPY . . 相当于 COPY context/. .
+
 docker build -t name:tag -f filename .
 
 docker build -t demo:test1 .
@@ -174,6 +223,35 @@ docker build -t nest:first -f Dockerfile2 .
 可以使用 `.dockerignore` 忽略文件
 
 > `.DS_Store` 是 mac 的用于指定目录的图标、背景、字体大小的配置文件
+
+### Docker 缓存
+
+一旦层发生变化，所有下游层也需要重建。
+
+```dockerfile
+# syntax=docker/dockerfile:1
+FROM node
+WORKDIR /app
+COPY . .          # Copy over all files in the current directory
+RUN npm install   # Install dependencies
+RUN npm build     # Run build
+```
+
+这个 Dockerfile 效率相当低。每次构建 Docker 映像时，更新任何文件都会导致重新安装所有依赖项，即使依赖项自上次以来没有更改！
+
+该 `COPY` 命令可以分为两部分。首先，复制包管理文件（在本例中为package.json和yarn.lock）。然后，安装依赖项。最后，复制项目源代码，该源代码会经常更改。
+
+```dockerfile
+# syntax=docker/dockerfile:1
+FROM node
+WORKDIR /app
+COPY package.json yarn.lock .    # Copy package management files
+RUN npm install                  # Install dependencies
+COPY . .                         # Copy over project files
+RUN npm build                    # Run build
+```
+
+你可以使用 `.dockerignore` 文件指定过滤文件。
 
 ### 多阶段构建
 
