@@ -106,7 +106,7 @@ linux 操作系统提供了 namespace 机制，可以给进程、用户、网络
   - Dockerfile 指令
   - 镜像层
   - 缓存层
-  - 查看创建镜像层的命令 `docker history hello:first1`
+  - 查看创建镜像层的命令 `docker history hello:1`
 
 
 ## Docker 入门
@@ -142,7 +142,7 @@ Docker architecture
 docker run \
   --name hello-nginx \
   -p 80:80 \
-  -v /tmp/docker/hello-nginx:/usr/share/nginx/html \
+  -v ~/docker/hello-nginx:/usr/share/nginx/html \
   -e KEY1=VALUE1 \
   -d \
   nginx:latest
@@ -339,9 +339,11 @@ docker system prune -a --volumes
 
 pnpm 安装有 node_modules 时，构建镜像未按预期执行。
 
-当项目安装过依赖时，需要添加 .dockerignore 文件，忽略 node_modules 文件夹。
+当项目安装过依赖时，需要添加 .dockerignore 文件，如 node_modules 文件夹。
 
 不然构建镜像，`COPY . .` 等导致镜像运行不正常。
+
+注意，可能会忽略 COPY 命令所需要的文件，如设置忽略 dist 目录，那么 nginx 镜像示例中 `COPY dist .` 会无效。
 
 查看端口占用
 

@@ -3,7 +3,7 @@ FROM node:18-alpine
 
 WORKDIR /app
 
-COPY package.json .
+COPY package.json pnpm-lock.yaml .
 
 RUN npm config set registry https://registry.npmmirror.com/
 
