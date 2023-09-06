@@ -190,6 +190,8 @@ Dockerfile 指令含义
 - `ARG`: 声明构建参数，使用 `${xxx}` 来取
 - `ENV`: 声明环境变量
 
+Dockerfile 中不建议放置复杂的逻辑，而且它语法支持也很有限。如果有复杂的构建需求，更应该通过 Shell 脚本或者 Node 程序来实现。
+
 差异
 
 - `COPY` vs `ADD`
@@ -200,6 +202,10 @@ Dockerfile 指令含义
 - `CMD` vs `ENTRYPOINT`
   - 用 `CMD` 的时候，启动命令是可以重写的，将 Dockerfile 中 `CMD` 命令重写
   - 使用 `ENTRYPOINT` 不能重新启动命令
+- `ARG` vs `ENV`
+  - 都是设置环境变量
+  - `ARG` 所设置是构建时的环境变量，在将来容器运行时是不会存在这些环境变量的。
+  - 不要在 `ARG` 放置敏感信息，因为 `docker history` 可以看到构建的过程
 
 ```bash
 # CMD

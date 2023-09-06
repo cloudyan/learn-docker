@@ -114,3 +114,4 @@ https://docker_practice.gitee.io/zh-cn/install/mirror.html
 - https://github.com/komljen/dockerfile-examples
 - https://github.com/docker-library/docs
 - https://github.com/shfshanyue/compose
+- [使用 Docker 实现前端应用的标准化构建、部署和运行](https://juejin.cn/post/7269668219488354361)
