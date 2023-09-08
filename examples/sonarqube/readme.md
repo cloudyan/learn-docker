@@ -14,7 +14,7 @@ docker run --name sq --link db -e SONARQUBE_JDBC_URL=jdbc:postgresql://db:5432/s
 docker cp ~/sonarqube/plugins/sonar-gitlab-plugin-4.1.0.jar e5a785409b80:/opt/sonarqube/extensions/plugins
 ```
 
-## 环境变量配置:
+## 环境变量配置
 
 - sonar.jdbc.username : 数据库账号
 - sonar.jdbc.password : 数据库密码

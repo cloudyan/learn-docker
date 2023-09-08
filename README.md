@@ -84,9 +84,10 @@ https://docker_practice.gitee.io/zh-cn/install/mirror.html
 ```json
 {
   "registry-mirrors": [
+    "https://5xtmil6q.mirror.aliyuncs.com",
     "https://hub-mirror.c.163.com",
     "https://mirror.baidubce.com",
-    "https://registry.docker-cn.com",
+    "https://docker.m.daocloud.io",
     "https://docker.mirrors.ustc.edu.cn"
   ]
 }

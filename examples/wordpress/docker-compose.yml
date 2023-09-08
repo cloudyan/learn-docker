@@ -1,5 +1,4 @@
-version: '3.3'
-
+version: "3"
 services:
 
   wpdb:
@@ -9,14 +8,10 @@ services:
     # or
     # mysql:8.0
     image: mysql:8.0
-
-    # [Warning] [MY-011068] [Server] The syntax '--skip-host-cache' is deprecated and will be removed in a future release. Please use SET GLOBAL host_cache_size=0 instead.
-    # [Warning] [MY-010918] [Server] 'default_authentication_plugin' is deprecated and will be removed in a future release. Please use authentication_policy instead.
     command:
       - --default_authentication_plugin=mysql_native_password
       - --character-set-server=utf8mb4
       - --collation-server=utf8mb4_unicode_ci
-
     volumes:
       - db_data:/var/lib/mysql
     restart: always
@@ -26,7 +21,6 @@ services:
       MYSQL_USER: wordpress
       MYSQL_PASSWORD: wordpress
 
-  # info: No 'wp-config.php' found in /var/www/html, but 'WORDPRESS_...' variables supplied; copying 'wp-config-docker.php' (WORDPRESS_DB_HOST WORDPRESS_DB_NAME WORDPRESS_DB_PASSWORD WORDPRESS_DB_USER)
   wordpress:
     depends_on:
       - wpdb
@@ -40,22 +34,4 @@ services:
       WORDPRESS_DB_PASSWORD: wordpress
       WORDPRESS_DB_NAME: wordpress
 volumes:
-  db_data: {}
-
-# docker-compose -f test.yml up
-# https://github.com/yeasy/docker_practice/pull/415
-
-# https://qiita.com/vc7/items/e88026c75f2280f95ed4
-# docker volume ls -q
-# 关于 db_data 命名卷
-# https://yeasy.gitbooks.io/docker_practice/content/image/dockerfile/volume.html
-# https://yeasy.gitbooks.io/docker_practice/content/data_management/volume.html
-# 无主的数据卷可能会占据很多空间，要清理请使用以下命令
-# docker volume prune
-
-# Linking is a legacy feature. Please use "user defined networks":
-# https://stackoverflow.com/questions/41768157/how-to-link-container-in-docker/41768466
-# sudo docker run --name rabbitmq -p 8080:80 -d --network mynetwork rabbitmq
-
-# https://cntnr.io/setting-up-wordpress-with-docker-262571249d50
-# https://docs.docker.com/compose/networking/
+  db_data:

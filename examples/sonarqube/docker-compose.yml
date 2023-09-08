@@ -25,7 +25,7 @@ services:
       sonar.jdbc.password: 123456
       sonar.jdbc.url: jdbc:postgresql://db:5432/sonar
       links:
-      - db
+        - db
     volumes:
       - /usr/local/docker/sonarqube/conf:/opt/sonarqube/conf
       - /usr/local/docker/sonarqube/extensions:/opt/sonarqube/extensions
