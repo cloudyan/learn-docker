@@ -210,6 +210,8 @@ Dockerfile 中不建议放置复杂的逻辑，而且它语法支持也很有限
   - `ARG` 所设置是构建时的环境变量，在将来容器运行时是不会存在这些环境变量的。
   - 不要在 `ARG` 放置敏感信息，因为 `docker history` 可以看到构建的过程
 
+构建镜像与容器
+
 ```bash
 # CMD
 CMD ["sleep", "10m"]
@@ -217,7 +219,7 @@ CMD ["sleep", "10m"]
 # 构建镜像
 docker build -t hello:first -f first.dockerfile .
 
-# 运行容器（重新命令）
+# 运行容器（重写命令）
 docker run -td --name hello-1 -p 5173:5173 hello:first npm run dev -- --host 0.0.0.0
 ```
 
