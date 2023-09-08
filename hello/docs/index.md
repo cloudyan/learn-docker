@@ -34,10 +34,11 @@
     - [Docker 是怎么实现的](#docker-是怎么实现的)
   - [Docker 入门](#docker-入门)
     - [入门学习](#入门学习)
-    - [hello-nginx](#hello-nginx)
+    - [基础镜像构建](#基础镜像构建)
     - [Dockerfile 构建镜像](#dockerfile-构建镜像)
     - [Docker 缓存](#docker-缓存)
     - [多阶段构建](#多阶段构建)
+    - [容器编排 docker-compose](#容器编排-docker-compose)
   - [常见问题](#常见问题)
     - [为什么 Dockerfile 有的时候需要加 `ln -s /sbin/runc /usr/bin/runc`](#为什么-dockerfile-有的时候需要加-ln--s-sbinrunc-usrbinrunc)
 
@@ -133,9 +134,11 @@ Docker architecture
    3. hello-mysql
 2. 多阶段构建
    1. Dockerfile 构建镜像
-3. 容器编排 docker-compose
+3. docker-compose
 
-### hello-nginx
+### 基础镜像构建
+
+hello-nginx
 
 ```bash
 # 命令行
@@ -298,6 +301,21 @@ EXPOSE 3000
 
 CMD ["node", "/app/main.js"]
 ```
+
+### 容器编排 docker-compose
+
+Compose 项目是 Docker 官方的开源项目，负责实现对 Docker 容器集群的快速编排。
+
+Compose 中有两个重要的概念：
+
+- 服务 (service)：一个应用的容器，实际上可以包括若干运行相同镜像的容器实例。
+- 项目 (project)：由一组关联的应用容器组成的一个完整业务单元，在 docker-compose.yml 文件中定义。
+
+可见，一个项目可以由多个服务（容器）关联而成，Compose 面向项目进行管理。
+
+场景
+
+最常见的项目是 web 网站，该项目应该包含 web 应用和缓存。
 
 ## 常见问题
 
