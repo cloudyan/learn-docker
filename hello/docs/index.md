@@ -237,10 +237,6 @@ docker build -t demo:test1 .
 docker build -t nest:first -f Dockerfile2 .
 ```
 
-可以使用 `.dockerignore` 忽略文件
-
-> `.DS_Store` 是 mac 的用于指定目录的图标、背景、字体大小的配置文件
-
 ### Docker 缓存
 
 一旦层发生变化，所有下游层也需要重建。
@@ -262,13 +258,15 @@ RUN npm build     # Run build
 # syntax=docker/dockerfile:1
 FROM node
 WORKDIR /app
-COPY package.json yarn.lock .    # Copy package management files
-RUN npm install                  # Install dependencies
-COPY . .                         # Copy over project files
-RUN npm build                    # Run build
+COPY package.json package-lock.json .   # Copy package management files
+RUN npm install                         # Install dependencies
+COPY . .                                # Copy over project files
+RUN npm build                           # Run build
 ```
 
 你可以使用 `.dockerignore` 文件指定过滤文件。
+
+> `.DS_Store` 是 mac 的用于指定目录的图标、背景、字体大小的配置文件
 
 ### 多阶段构建
 
