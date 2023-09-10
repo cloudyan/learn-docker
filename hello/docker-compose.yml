@@ -1,0 +1,25 @@
+# docker-compose.yml
+
+# docker-compose up -d
+version: '3.8'
+services:
+  mysql:
+    image: mysql:8
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=xiaohan
+      - MYSQL_DATABASE=blog
+    volumes:
+      # 使用命名数据卷，如不存在，自动创建
+      - mysql:/var/lib/mysql
+    ports:
+      - '3306:3306'
+
+  redis:
+    image: redis:latest
+    restart: always
+    ports:
+      - '6379:6379'
+
+volumes:
+  mysql:
