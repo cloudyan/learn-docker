@@ -29,7 +29,7 @@ docker-compose up -d
 
 关于 db_data 命名卷
 
-- https://yeasy.gitbooks.io/docker_practice/content/image/dockerfile/volume.html
+- https://yeasy.gitbooks.io/docker_practice/content/image/config/volume.html
 - https://yeasy.gitbooks.io/docker_practice/content/data_management/volume.html
 
 无主的数据卷可能会占据很多空间，要清理请使用以下命令

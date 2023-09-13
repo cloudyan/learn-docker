@@ -1,0 +1,15 @@
+version: "3"
+services:
+
+  # docker-compose up -d --build web
+  web:
+    depends_on:
+      - db
+    build:
+      context: .
+      dockerfile: config/5.dockerfile
+    ports:
+      - 4000:80
+
+  db:
+    image: "redis:alpine"

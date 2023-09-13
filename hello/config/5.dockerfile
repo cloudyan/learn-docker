@@ -23,5 +23,5 @@ COPY --from=builder app/dist /usr/share/nginx/html
 
 # EXPOSE 80
 
-# docker build -f dockerfile/5.dockerfile -t hello:5 .
+# docker build -f config/5.dockerfile -t hello:5 .
 # docker run -d --name hello-5 -p 8091:80 hello:5

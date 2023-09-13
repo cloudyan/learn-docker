@@ -41,8 +41,9 @@
       - [Docker 缓存](#docker-缓存)
     - [多阶段构建](#多阶段构建)
     - [容器编排 docker-compose](#容器编排-docker-compose)
-  - [常见问题](#常见问题)
-    - [为什么 Dockerfile 有的时候需要加 `ln -s /sbin/runc /usr/bin/runc`](#为什么-dockerfile-有的时候需要加-ln--s-sbinrunc-usrbinrunc)
+  - [CI/CD](#cicd)
+    - [持续集成](#持续集成)
+    - [CD 持续交付/持续部署](#cd-持续交付持续部署)
 
 ## Docker 概念基础
 
@@ -266,7 +267,7 @@ Dockerfile 中不建议放置复杂的逻辑，而且它语法支持也很有限
 
 ```bash
 # 构建镜像
-docker build -f dockerfile/1.dockerfile -t hello:1 .
+docker build -f config/1.dockerfile -t hello:1 .
 ```
 
 注意事项
@@ -295,15 +296,20 @@ docker run -d --name hello-3 -p 5174:5173 hello:3
 docker run -d --name hello-3 -p 5174:5173 hello:3 npm run dev -- --host 0.0.0.0
 ```
 
+
 ### 扩展知识
 
 #### Docker 缓存
 
-Dockerfile 指令的顺序很重要。Docker 构建由一系列有序的构建指令组成。
+Docker 的构建如下
 
-Docker 运行构建时，会将每一次指令构建缓存一层，构建器会尝试重用早期构建中的层。
+1. Docker 构建由一系列有序的构建指令组成（Dockerfile 指令）。
+2. Docker 运行构建时，会将每一次指令构建缓存一层，构建器会尝试重用早期构建中的层。
+3. Docker 镜像时多层存储的。
 
-一旦某层发生变化，所有下游层也需要重建。
+由此可以看出，Dockerfile 指令的顺序很重要，一旦某层发生变化，所有下游层也需要重建。
+
+示例
 
 ```dockerfile
 # syntax=docker/dockerfile:1
@@ -332,41 +338,74 @@ RUN npm build                           # Run build
 
 > `.DS_Store` 是 mac 的用于指定目录的图标、背景、字体大小的配置文件
 
+更多缓存复用
+
+- [pnpm+docker](https://pnpm.io/zh/docker)
+
+接下来我们继续讲 Docker 构建高级用法
+
 ### 多阶段构建
 
+适用多阶段构建主要有两个主要原因
+
+1. 创建占用空间较小的最终映像
+2. 并行运行生成步骤，使生成管道更快、更高效
+
 ```bash
-# build stage
-# FROM node:18 as build-stage
-FROM node:18.0-alpine3.14 as build-stage
+# 多阶段构建
+FROM node:18-alpine as builder
 
 WORKDIR /app
 
-COPY package.json .
+COPY package.json pnpm-lock.yaml .
 
 RUN npm config set registry https://registry.npmmirror.com/
 
-RUN npm install
+RUN npm i -g pnpm serve
+RUN pnpm install
 
 COPY . .
 
 RUN npm run build
 
-# production stage
-FROM node:18 as production-stage
+FROM nginx:alpine
+COPY --from=builder app/nginx.conf /etc/nginx/conf.d/default.conf
+COPY --from=builder app/dist /usr/share/nginx/html
+```
 
-COPY --from=build-stage /app/dist /app
-COPY --from=build-stage /app/package.json /app/package.json
+关于并行构建，可参考[官方示例](https://docs.docker.com/build/guide/multi-stage/)
+
+下面虚拟一个例子
+
+```bash
+FROM node:18-alpine as base
 
 WORKDIR /app
 
-RUN npm install --production
+COPY package.json pnpm-lock.yaml .
 
-EXPOSE 3000
+RUN npm config set registry https://registry.npmmirror.com/
 
-CMD ["node", "/app/main.js"]
+RUN npm i -g pnpm serve
+RUN pnpm install
+
+COPY . .
+
+FROM base as lint
+RUN npm run lint
+
+FROM base as testing
+RUN npm run build
+RUN npm run test
+
+FROM nginx:alpine
+COPY --from=testing app/nginx.conf /etc/nginx/conf.d/default.conf
+COPY --from=testing app/dist /usr/share/nginx/html
 ```
 
-使用一个 Dockerfile 模板文件，可以让我们很方便的定义一个单独的应用容器。
+以上 lint 与 testing 流程就是并行的
+
+前面介绍了使用一个 Dockerfile 文件，让我们很方便的定义一个单独的应用容器。
 
 在日常工作中，经常会碰到需要多个容器相互配合来完成某项任务的情况。
 
@@ -412,85 +451,32 @@ services:
 docker-compose 也支持与 Dockerfile 模板文件一起使用。
 
 ```bash
+version: "3"
+services:
 
+  # docker-compose up -d --build web
+  web:
+    build:
+      context: .
+      dockerfile: config/5.dockerfile
+    ports:
+      - 4000:80
 ```
 
-## 常见问题
+Docker Compose 是一种工具，可让您运行使用 Compose 文件格式定义的多容器 Docker 应用程序。使用 Compose 文件，您可以使用单个命令创建和启动配置中定义的所有服务。但它功能有限，最流行的容器编排工具是 Kubernetes，已成为行业标准。
 
-构建报错
+Kubernetes 是一个开源的容器编排引擎，用来对容器化应用进行自动化部署、 扩缩和管理。
 
-```bash
-ERROR: failed to solve: failed to compute cache key: failed to read expected number of bytes: unexpected EOF
-```
+> Docker Compose 旨在在单个主机系统上运行容器。相比之下，Kubernetes 可以管理跨多个节点（计算机）部署的容器。
 
-拉取镜像时报错
+对于 k8s，想了解更多请参看 [Kubernetes 官方文档](https://kubernetes.io/zh-cn/docs/home/)
 
-```bash
-docker pull node:20-alpine
+前面介绍了容器，接下来我们来介绍 CI/CD
 
-Unable to pull node:latest
+## CI/CD
 
-failed to read expected number of bytes: unexpected EOF
-```
+### 持续集成
 
-原因分析
 
-可能的原因如下：
 
-- 基础镜像所在仓库与构建集群间的网络不佳，例如跨境。
-- 触发了仓库的限流机制，例如 Dockerhub 限制镜像拉取数量。
-
-解决方案
-
-建议将您的基础镜像存储至火山引擎镜像仓库 CR，在 Dockerfile 中从镜像仓库 CR 下载基础镜像。
-
-```bash
-# 查看配置
-cat ~/.docker/daemon.json
-
-# 确认网络连接
-ping hub.docker.com
-
-# 清除缓存
-docker system prune -a --volumes
-# 清理掉所有无用的镜像、容器和卷（注意备份需要的镜像和容器）
-```
-
-问题 2
-
-pnpm 安装有 node_modules 时，构建镜像未按预期执行。
-
-当项目安装过依赖时，需要添加 .dockerignore 文件，如 node_modules 文件夹。
-
-不然构建镜像，`COPY . .` 等导致镜像运行不正常。
-
-注意，可能会忽略 COPY 命令所需要的文件，如设置忽略 dist 目录，那么 nginx 镜像示例中 `COPY dist .` 会无效。
-
-查看端口占用
-
-```bash
-# 端口使用情况
-netstat -ntulp | grep 5173
-
-# 查看端口占用
-lsof -i:端口号
-
-# Mac 下查看占用端口的进程
-lsof -i tcp:5173
-
-# 杀进程
-kill -9 PID
-```
-
-### 为什么 Dockerfile 有的时候需要加 `ln -s /sbin/runc /usr/bin/runc`
-
-在 Dockerfile 中使用  `ln -s /sbin/runc /usr/bin/runc` 的原因是为了解决某些 Linux 发行版中 runc 的路径问题。
-
-runc 是一个用于运行容器的工具，它是 Docker 的一个子项目，也是 OCI（Open Container Initiative）的一个标准。在某些 Linux 发行版中，runc 的路径可能不是 `/usr/bin/runc`，而是 `/sbin/runc` 或其他路径。这会导致在构建 Dockeer 镜像时无法找到 runc，从而导致构建失败。为了解决这个问题，可以在 Dockerfile 中使用 `ln -s /sbin/runc /usr/bin/runc` 命令，将 `/sbin/runc` 软链接到 `/usr/bin/runc`，这样就可以在构建镜像时找到 runc。
-
-需要注意的是，这个问题只是出现在某些 Linux 发行版中，如果你的 Linux 发行版中 runc 的路径是 `/usr/bin/runc`，那么就不需要在 Dockerfile 中使用 `ln -s /sbin/runc /usr/bin/runc` 命令。
-
-参考：
-
-- https://www.volcengine.com/docs/6461/191606
-- https://www.volcengine.com/docs/6461/163867
+### CD 持续交付/持续部署
