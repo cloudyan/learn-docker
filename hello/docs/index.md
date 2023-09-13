@@ -34,9 +34,11 @@
     - [Docker 是怎么实现的](#docker-是怎么实现的)
   - [Docker 入门](#docker-入门)
     - [入门学习](#入门学习)
-    - [基础镜像构建](#基础镜像构建)
+    - [常用命令](#常用命令)
+    - [基础镜像](#基础镜像)
     - [Dockerfile 构建镜像](#dockerfile-构建镜像)
-    - [Docker 缓存](#docker-缓存)
+    - [扩展知识](#扩展知识)
+      - [Docker 缓存](#docker-缓存)
     - [多阶段构建](#多阶段构建)
     - [容器编排 docker-compose](#容器编排-docker-compose)
   - [常见问题](#常见问题)
@@ -82,7 +84,7 @@ Docker 在一个操作系统上实现多个独立的容器也是这种思路。
 
 > Docker 使用 Google 公司推出的 Go 语言 进行开发实现，基于 Linux 内核的 cgroup，namespace，以及 OverlayFS 类的 Union FS 等技术，对进程进行封装隔离，属于 操作系统层面的虚拟化技术。由于隔离的进程独立于宿主和其它的隔离的进程，因此也称其为容器。
 
-Docker 架构
+Docker 的实现
 
 ![docker-on-linux](./assets/docker-on-linux.png)
 
@@ -118,7 +120,7 @@ Docker 客户端与 Docker 守护程序通信，后者负责构建、运行和�
 
 Docker architecture
 
-![architecture](./assets/architecture.svg)
+![docker-architecture](./assets/docker-architecture.png)
 
 大家本机学习，可以从官网下载安装 Docker desktop 来使用 Docker。
 
@@ -128,15 +130,34 @@ Docker architecture
 
 我们构建以下几个常用容器
 
-1. 基础镜像构建
+1. 常用命令
+2. 构建镜像
    1. hello-nginx
    2. hello-nodejs
    3. hello-mysql
-2. 多阶段构建
+3. 多阶段构建
    1. Dockerfile 构建镜像
-3. docker-compose
+4. docker-compose
 
-### 基础镜像构建
+### 常用命令
+
+```bash
+docker -h
+
+docker pull
+docker images
+docker ps
+docker image ls
+docker container ls
+docker build
+docker run
+docker exec
+docker info
+docker system df
+docker system prune
+```
+
+### 基础镜像
 
 hello-nginx
 
@@ -162,24 +183,55 @@ docker run \
 
 ### Dockerfile 构建镜像
 
-```bash
-FROM node:latest
+使用 Dockerfile 指令实现自定义镜像
 
-ARG RUNTIME_ENV
+```bash
+# 新建一个项目
+npm create vite@latest
+# 选择 react
+
+pnpm i
+pnpm run build
+```
+
+第一个镜像 hello-1
+
+```bash
+docker run \
+  --name hello-01 \
+  -p 80:80 \
+  -v ./dist:/usr/share/nginx/html \
+  -d \
+  nginx:latest
+
+# Dockerfile
+FROM nginx:alpine
+
+COPY dist /usr/share/nginx/html
+```
+
+第二个镜像 hello-2
+
+```bash
+# FROM node:latest
+FROM node:18-alpine
 
 WORKDIR /app
 
-COPY . .
+COPY package.json pnpm-lock.yaml .
 
 RUN npm config set registry https://registry.npmmirror.com/
 
-RUN npm install -g http-server
+RUN npm i -g pnpm serve
+RUN pnpm install
 
-ENV RUNTIME_ENV=${RUNTIME_ENV}
+COPY . .
 
-EXPOSE 8080
+RUN npm run build
 
-CMD ["http-server", "-p", "8080"]
+EXPOSE 5173
+
+CMD ["serve", "dist", "-l", "5173"]
 ```
 
 Dockerfile 指令含义
@@ -210,36 +262,48 @@ Dockerfile 中不建议放置复杂的逻辑，而且它语法支持也很有限
   - `ARG` 所设置是构建时的环境变量，在将来容器运行时是不会存在这些环境变量的。
   - 不要在 `ARG` 放置敏感信息，因为 `docker history` 可以看到构建的过程
 
-构建镜像与容器
+构建镜像
 
 ```bash
-# CMD
-CMD ["sleep", "10m"]
-
 # 构建镜像
-docker build -t hello:first -f first.dockerfile .
-
-# 运行容器（重写命令）
-docker run -td --name hello-1 -p 5173:5173 hello:first npm run dev -- --host 0.0.0.0
+docker build -f dockerfile/1.dockerfile -t hello:1 .
 ```
 
-构建命令格式
+注意事项
+
+::: warning 上下文
+
+这个 `.` 就是构建上下文的目录，你也可以指定别的路径。
+
+`docker build` 第一步就是将上下文目录（和子目录）发送到 docker 守护进程
+
+后续操作文件，就是基于这个上下文操作，端上脱离上下文的文件无法操作
+
+如: `COPY . .` 相当于 `COPY context/. .`
+
+:::
+
+
+运行容器
 
 ```bash
-# 这个 . 就是构建上下文的目录，你也可以指定别的路径。
-# 第一步 docker build 是将上下文目录（和子目录）发送到 docker 守护进程
-# 内部的 COPY 等就是相对于这个目录路径
-# COPY . . 相当于 COPY context/. .
+# 运行容器
+docker run -d --name hello-1 -p 8090:80 hello:1
+docker run -d --name hello-3 -p 5174:5173 hello:3
 
-docker build -t name:tag -f filename .
-
-docker build -t demo:test1 .
-docker build -t nest:first -f Dockerfile2 .
+# 重写命令
+docker run -d --name hello-3 -p 5174:5173 hello:3 npm run dev -- --host 0.0.0.0
 ```
 
-### Docker 缓存
+### 扩展知识
 
-一旦层发生变化，所有下游层也需要重建。
+#### Docker 缓存
+
+Dockerfile 指令的顺序很重要。Docker 构建由一系列有序的构建指令组成。
+
+Docker 运行构建时，会将每一次指令构建缓存一层，构建器会尝试重用早期构建中的层。
+
+一旦某层发生变化，所有下游层也需要重建。
 
 ```dockerfile
 # syntax=docker/dockerfile:1
@@ -317,8 +381,26 @@ Compose 中有两个重要的概念：
 
 最常见的项目是 web 网站，该项目应该包含 web 应用和缓存。
 
-## 常见问题
+```bash
+# docker-compose.yml
+version: '3'
+services:
+  web:
+    build: .
+    ports:
+      - "5000:5000"
+    depends_on:
+      - redis
+  redis:
+    image: "redis:alpine"
 
+```
+
+真实示例
+
+- wordpress
+
+## 常见问题
 
 构建报错
 

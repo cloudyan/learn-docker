@@ -12,12 +12,13 @@ RUN pnpm install
 
 COPY . .
 
-# RUN npm run dev -- --host 0.0.0.0
+# RUN npm run build
 
 EXPOSE 5173
 
+# CMD ["serve", "dist", "-l", "5173"]
 CMD ["npm", "run", "dev"]
 # CMD ["sleep", "10m"]
 
-# docker build -f dockerfile/first.dockerfile -t hello:1 .
-# docker run -td --name hello-1 -p 5173:5173 hello:1 npm run dev -- --host 0.0.0.0
+# docker build -f dockerfile/3.dockerfile -t hello:3 .
+# docker run -td --name hello-3 -p 5174:5173 hello:3 npm run dev -- --host 0.0.0.0

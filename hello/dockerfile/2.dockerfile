@@ -14,9 +14,11 @@ COPY . .
 
 RUN npm run build
 
-EXPOSE 8080
+EXPOSE 5173
 
-CMD ["serve", "./dist", "-p", "8080"]
+CMD ["serve", "dist", "-l", "5173"]
+# CMD ["npm", "run", "dev"]
+# CMD ["sleep", "10m"]
 
-# docker build -f dockerfile/serve.dockerfile -t hello:2 .
-# docker run -td --name hello-2 -p 8080:8080 hello:2
+# docker build -f dockerfile/2.dockerfile -t hello:2 .
+# docker run -td --name hello-2 -p 5173:5173 hello:2
