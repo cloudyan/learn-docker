@@ -366,6 +366,12 @@ EXPOSE 3000
 CMD ["node", "/app/main.js"]
 ```
 
+使用一个 Dockerfile 模板文件，可以让我们很方便的定义一个单独的应用容器。
+
+在日常工作中，经常会碰到需要多个容器相互配合来完成某项任务的情况。
+
+比如 web应用和数据库
+
 ### 容器编排 docker-compose
 
 Compose 项目是 Docker 官方的开源项目，负责实现对 Docker 容器集群的快速编排。
@@ -399,6 +405,15 @@ services:
 真实示例
 
 - wordpress
+- yapi
+
+组合使用
+
+docker-compose 也支持与 Dockerfile 模板文件一起使用。
+
+```bash
+
+```
 
 ## 常见问题
 

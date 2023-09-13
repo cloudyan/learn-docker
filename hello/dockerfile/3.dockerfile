@@ -21,4 +21,4 @@ CMD ["npm", "run", "dev"]
 # CMD ["sleep", "10m"]
 
 # docker build -f dockerfile/3.dockerfile -t hello:3 .
-# docker run -td --name hello-3 -p 5174:5173 hello:3 npm run dev -- --host 0.0.0.0
+# docker run -d --name hello-3 -p 5174:5173 hello:3 npm run dev -- --host 0.0.0.0

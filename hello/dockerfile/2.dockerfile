@@ -21,4 +21,4 @@ CMD ["serve", "dist", "-l", "5173"]
 # CMD ["sleep", "10m"]
 
 # docker build -f dockerfile/2.dockerfile -t hello:2 .
-# docker run -td --name hello-2 -p 5173:5173 hello:2
+# docker run -d --name hello-2 -p 5173:5173 hello:2
